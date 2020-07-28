@@ -1,0 +1,41 @@
+version: '3.2'
+
+services: 
+  iomad:
+    container_name: iomad
+    hostname: iomad
+    image: iomad
+    build: 
+      context: .
+    depends_on: 
+      - iomad-db
+    expose: 
+      - 80
+    ports:
+      - 88:80
+    volumes: 
+      - DataVolume:/moodledata
+    environment: 
+      - "DB-TYPE=mssql"
+      - "DB-NAME=iomad"
+      - "DB-USER=sa"
+      - "DB-PASS=Coyotes!screwy!curls12!"
+
+  iomad-db:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    hostname: iomad-db
+    container_name: im-mssql
+    expose: 
+      - 1433
+    ports:
+      - 1434:1433
+    environment: 
+      - "ACCEPT_EULA=Y"
+      - "SA_PASSWORD=Coyotes!screwy!curls12!"
+      - "MSSQL_PID=Standard"
+    volumes: 
+      - DbVol:/var/opt/mssql
+
+volumes:
+  DbVol:
+  DataVolume:
